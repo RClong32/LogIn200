@@ -8,21 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LogIn200
+namespace Login200_MP
 {
-    public partial class LoginForm : Form
+    public partial class LoginMP : Form
     {
-        /// <summary>
-        /// The reference to the controller object, later
-        /// we need to replace this with delegate(s).
-        /// </summary>
-        Controller controller;
+        inputHandler iHandler;
 
-        public LoginForm()
+        public LoginMP(inputHandler ih)
         {
             InitializeComponent();
-           
+            this.iHandler = ih;
         }
+
+        private void LoginMP_Load(object sender, EventArgs e)
+        {
+            
+        }
+        
 
         /// <summary>
         /// THis method keepts the GUI controlls enabled/disabled, displaying the
@@ -67,12 +69,12 @@ namespace LogIn200
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UxLoginBtn_Click(object sender, EventArgs e)
+        private void uxLoginBtn_Click(object sender, EventArgs e)
         {
             String un = tbUserName.Text;
             String up = tbPassword.Text;
-            Console.WriteLine(un + " " +up);
-            controller.handleEvents(State.GOTPASSWORD, un+":"+up);
+            Console.WriteLine(un + " " + up);
+            iHandler(State.GOTPASSWORD, un + ":" + up);
 
         }
 
@@ -81,9 +83,9 @@ namespace LogIn200
         /// </summary>
         /// <param name="c">The App's main controller object. Later
         /// this shold be a delegate.</param>
-        public void SetController(Controller c)
+        public void SetController(inputHandler c)
         {
-            controller = c;
+            iHandler = c;
         }
 
         /// <summary>
@@ -93,35 +95,17 @@ namespace LogIn200
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-            controller.handleEvents(State.START, "");
+            iHandler(State.START, "");
         }
 
-        /// <summary>
-        /// This method helps avoid some user input propblems, and helps 
-        /// keep the GUI in the right state.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void tbUserName_TextChanged(object sender, EventArgs e)
         {
-            controller.handleEvents(State.GOTUSERNAME, "");
+            iHandler(State.GOTUSERNAME, "");
         }
 
-
-        /// <summary>
-        /// This method helps avoid some user input propblems, and helps
-        /// keep the GUI in the right state.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void tbPassword_TextChanged(object sender, EventArgs e)
         {
             uxLoginBtn.Enabled = true;
-        }
-
-        private void LoginForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
